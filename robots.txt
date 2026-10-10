@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://germanrabago.github.io/linderocercos/sitemap.xml
