@@ -453,7 +453,7 @@ td .mq { display: none; }
             <h3 id="panelTitle" data-i18n="panelTitle">Tu cerco</h3>
             <div class="units">
               <div class="seg" id="segUnit" role="group" aria-label="Unidades"><button data-v="m">m</button><button data-v="ft">ft</button></div>
-              <div class="seg" id="segCur" role="group" aria-label="Moneda"><button data-v="USD">USD</button><button data-v="MXN">MXN</button></div>
+              <div class="seg" id="segCur" role="group" aria-label="Moneda"><button data-v="MXN">MXN</button><button data-v="USD">USD</button></div>
             </div>
           </div>
           <div class="panel-body">
@@ -578,7 +578,7 @@ const CFG = {
   contacts: [{ label: '664 724 4377', num: '526647244377' }]
 };
 const S = {
-  lang: 'es', unit: 'm', cur: 'USD', shape: 'rect',
+  lang: 'es', unit: 'm', cur: 'MXN', shape: 'rect',
   dims: { w: 30, l: 20, cw: 10, cl: 8, len: 50 },
   custom: { closed: false, sides: [{ len: 40, turn: 90 }, { len: 20, turn: 90 }, { len: 25, turn: 0 }] },
   buried: 3, doors: [{ side: 0, w: 3, pos: 0.5 }], uses: {}, time: 'day', cam: 'aerial',
@@ -1288,7 +1288,7 @@ function refresh() {
   document.querySelectorAll('#seeWith .chip').forEach(b => b.setAttribute('aria-pressed', String(!!S.uses[b.dataset.u])));
   renderQuote(L); drawPlan(L); drawElevation(); build3d(L);
   if (ok3d && refit) { goCam(true); refit = false; }
-  try { localStorage.setItem('cercoPrefs', JSON.stringify({ lang: S.lang, unit: S.unit, cur: S.cur })); } catch (e) {}
+  try { localStorage.setItem('cercoPrefs2', JSON.stringify({ lang: S.lang, unit: S.unit, cur: S.cur })); } catch (e) {}
 }
 function renderStatic() {
   const c0 = CFG.contacts[0];
@@ -1349,7 +1349,8 @@ function bind() {
   });
   $('doorList').addEventListener('click', e => { const b = e.target.closest('[data-rmd]'); if (!b) return; S.doors.splice(+b.dataset.rmd, 1); doorSig = ''; update(true); });
 }
-try { const p = JSON.parse(localStorage.getItem('cercoPrefs') || '{}'); if (p.lang) S.lang = p.lang; if (p.unit) S.unit = p.unit; if (p.cur) S.cur = p.cur; } catch (e) {}
+// cercoPrefs (v1) saved the old USD default on every visit, so it is ignored: MXN is now the default
+try { const p = JSON.parse(localStorage.getItem('cercoPrefs2') || '{}'); if (p.lang) S.lang = p.lang; if (p.unit) S.unit = p.unit; if (p.cur) S.cur = p.cur; } catch (e) {}
 /* ---------- ad landings and lead tracking ----------
    ?zona=valle|mexicali preselects the delivery area and retitles the hero; ?utm_source (or ?src) names the channel,
    which is added to the WhatsApp message so the seller knows where the lead came from. Every WhatsApp click is a lead:
