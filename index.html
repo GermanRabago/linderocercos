@@ -253,8 +253,7 @@ tfoot td { border-bottom: 0; padding-top: 16px; }
 td .mq { display: none; }
 @media (max-width: 560px) {
   table { min-width: 0; }
-  thead, tbody td:nth-child(2), tbody td:nth-child(3), td small.desc { display: none; }
-  td .mq { display: block; }
+  thead, td small.desc { display: none; }
   table, tbody, tfoot { display: block; }
   tr { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; border-bottom: 1px solid var(--line); }
   tfoot tr { border-bottom: 0; align-items: center; }
@@ -405,11 +404,11 @@ td .mq { display: none; }
     <h1 id="heroTitle" data-i18n="heroTitle">Cercos de PVC tipo rancho en Tijuana, Rosarito y Tecate</h1>
     <p class="hero-lead" data-i18n="heroLead"></p>
     <div class="hero-cta">
-      <a class="btn btn-light" href="#cotizador" data-i18n="heroCta">Calcular mi cerco</a>
-      <a class="btn btn-glass wa-plain" target="_blank" rel="noopener"><svg class="waic" aria-hidden="true"><use href="#wa"/></svg><span data-i18n="heroWa">Escríbenos</span></a>
+      <a class="btn btn-light wa-hero" target="_blank" rel="noopener"><svg class="waic" aria-hidden="true" style="color:#128c4a"><use href="#wa"/></svg><span data-i18n="heroWa">Pedir precio por WhatsApp</span></a>
+      <a class="btn btn-glass" href="#cotizador" data-i18n="heroCta">Calcular mi cerco</a>
     </div>
     <ul class="hero-meta">
-      <li><span data-i18n="heroKitL"></span> <b id="heroKit"></b></li>
+      <li><span data-i18n="heroKitL"></span> <b id="heroKit"></b> <span data-i18n="heroKitR"></span></li>
       <li data-i18n="heroM1"></li>
       <li data-i18n="heroM2"></li>
     </ul>
@@ -489,7 +488,7 @@ td .mq { display: none; }
             </div>
           </div>
           <div class="panel-foot">
-            <div class="sum"><div><small data-i18n="sumLabel">Total con IVA</small><b id="pTotal">—</b></div><div class="per" id="pPer"></div></div>
+            <div class="sum"><div><small data-i18n="sumLabel">Tu cerco</small><b id="pTotal">—</b></div><div class="per" id="pPer"></div></div>
             <a class="btn btn-wa block cta-wa" target="_blank" rel="noopener"><svg class="waic" aria-hidden="true"><use href="#wa"/></svg><span data-i18n="askBtn">Pedir por WhatsApp</span></a>
             <div class="foot-links"><span id="pMeta"></span><a href="#desglose" data-i18n="seeBreakdown">Ver desglose</a></div>
           </div>
@@ -497,12 +496,12 @@ td .mq { display: none; }
       </div>
 
       <section class="bd" id="desglose" aria-labelledby="bdTitle">
-        <div class="bd-head"><h3 id="bdTitle" data-i18n="quote">Desglose de tu cotización</h3><span id="folio"></span></div>
+        <div class="bd-head"><h3 id="bdTitle" data-i18n="quote">Lo que lleva tu cerco</h3><span id="folio"></span></div>
         <div class="bd-main">
           <div class="table-wrap"><table>
-            <thead><tr><th data-i18n="concept">Concepto</th><th class="r" data-i18n="qty">Cantidad</th><th class="r" data-i18n="unitPrice">Precio por kit</th><th class="r" data-i18n="subtotal">Importe</th></tr></thead>
+            <thead><tr><th data-i18n="concept">Concepto</th><th class="r" data-i18n="qty">Cantidad</th></tr></thead>
             <tbody id="bom"></tbody>
-            <tfoot><tr><td colspan="2" class="grand-l" id="taxLabel"></td><td colspan="2" class="r grand" id="grand">—</td></tr></tfoot>
+            <tfoot><tr><td class="grand-l" id="taxLabel"></td><td class="r grand" id="grand">—</td></tr></tfoot>
           </table></div>
           <ul class="notes" id="notes"></ul>
         </div>
@@ -563,7 +562,7 @@ td .mq { display: none; }
 </footer>
 
 <div class="mbar">
-  <a class="mbar-sum" href="#desglose"><small data-i18n="sumLabel">Total con IVA</small><b id="mTotal">—</b><small><span id="mMeta"></span> · <u data-i18n="seeBreakdown">Ver desglose</u></small></a>
+  <a class="mbar-sum" href="#desglose"><small data-i18n="sumLabel">Tu cerco</small><b id="mTotal">—</b><small><span id="mMeta"></span> · <u data-i18n="seeBreakdown">Ver desglose</u></small></a>
   <a class="btn btn-wa cta-wa" target="_blank" rel="noopener"><svg class="waic" aria-hidden="true"><use href="#wa"/></svg><span class="lbl-long" data-i18n="askBtn">Pedir por WhatsApp</span><span class="lbl-short" data-i18n="askBtnShort">Pedir</span></a>
 </div>
 
@@ -573,7 +572,8 @@ td .mq { display: none; }
 /* ============ PURE-START ============ */
 const FT = 0.3048;
 const CFG = {
-  kitUSD: 66.06, kitMXN: 1320.87,   // precio por kit con IVA incluido
+  kitUSD: 66.06, kitMXN: 1320.87,   // precio por kit con IVA incluido (ya no se muestra: el total se da por WhatsApp, 24/nov/2026)
+  perMeterMXN: 580, perMeterUSD: 29,   // precio de referencia por metro que se muestra arriba ("unos $580", igual que el anuncio L1)
   span: 2.4, postLen: 7 * FT, postW: 0.127, railT: 0.04, railH: 0.14,
   minEdge: 0.6, endKitCarriesRails: true, validityDays: 15,
   contacts: [{ label: '664 724 4377', num: '526647244377' }]
@@ -726,9 +726,10 @@ const I = {
   es: {
     brandSub: 'Cercos de PVC', navTool: 'Cotizador', navFence: 'El cerco', navFaq: 'Preguntas',
     heroTitle: 'Cercos de PVC tipo rancho en Tijuana, Rosarito y Tecate',
-    heroLead: 'Calcula cuántos kits necesitas y cuánto cuesta tu cerco antes de llamarnos. Cuando lo tengas, nos mandas la cotización por WhatsApp y la revisamos contigo.',
-    heroCta: 'Calcular mi cerco', heroWa: 'Escríbenos', heroKitL: 'Kit de poste y 3 travesaños:', heroM1: 'Precios con IVA', heroM2: 'Envío sin costo en Tijuana, Rosarito y Tecate',
-    toolTitle: 'Calcula tu cerco', toolLead: 'Escribe las medidas de tu terreno. El dibujo y el precio cambian mientras escribes.',
+    heroLead: 'Mándanos las medidas o la ubicación de tu terreno por WhatsApp y te damos el precio exacto. Si quieres, aquí mismo calculas cuántos kits lleva tu cerco y lo ves en 3D.',
+    heroCta: 'Calcular mi cerco', heroWa: 'Pedir precio por WhatsApp', heroKitL: 'Unos', heroKitR: 'por metro, con IVA', heroM1: 'Entrega en 1 a 3 días, sin costo en Tijuana, Rosarito y Tecate', heroM2: 'Ven a ver el material en Rosarito: agenda tu visita',
+    msgHero: 'Hola, quiero el precio de un cerco de PVC.',
+    toolTitle: 'Calcula tu cerco', toolLead: 'Escribe las medidas de tu terreno. El dibujo y los kits cambian mientras escribes.',
     panelTitle: 'Tu cerco', lot: 'Terreno', shapeRect: 'Rectángulo', shapeL: 'En L', shapeLine: 'Línea', shapeCustom: 'Libre', shapeCircle: 'Círculo', circ: 'Circunferencia', diam: 'Diámetro', circInfo: 'Se arma con {n} tramos rectos de {l}.', msgCirc: 'círculo de {c} de circunferencia ({d} de diámetro)', noteRound: 'Corral redondo: {n} postes con giro de {v}° cada uno, no de 90°. Lo revisamos contigo por WhatsApp.',
     width: 'Ancho', length: 'Largo', notchW: 'Ancho del recorte', notchL: 'Largo del recorte', lineLen: 'Largo del cerco',
     side: 'Lado', sideLen: 'Largo', turn: 'Al terminar, el cerco…', angle: 'Ángulo (+ derecha, − izquierda)',
@@ -744,9 +745,9 @@ const I = {
     seeWith: 'Mostrar:', useHouse: 'Casa', useHorses: 'Caballos', useCattle: 'Ganado', useArena: 'Picadero', useVine: 'Viñedo',
     useOpen: 'Disponible solo en terrenos cerrados.', useNoHouse: 'La casa no cabe en este terreno.', useNoArena: 'El picadero no cabe en este terreno.', useNoVine: 'El viñedo no cabe en este terreno.',
     legCorner: 'Esquina', legLinear: 'Línea', legEnd: 'Extremo', legDoor: 'Puerta',
-    sumLabel: 'Total con IVA', perShort: 'por {u}', seeBreakdown: 'Ver desglose', kits: 'kits', of: 'de cerco',
-    askBtn: 'Pedir por WhatsApp', askBtnShort: 'Pedir', shareBtn: 'Enviar a otra persona',
-    quote: 'Desglose de tu cotización', folio: 'Fecha', valid: 'vigente', days: 'días', name: 'Tu nombre (opcional)',
+    sumLabel: 'Tu cerco', perShort: 'por {u}', seeBreakdown: 'Ver desglose', kits: 'kits', of: 'de cerco',
+    askBtn: 'Pedir mi precio por WhatsApp', askBtnShort: 'Pedir precio', shareBtn: 'Enviar a otra persona',
+    quote: 'Lo que lleva tu cerco', totalKits: 'Total de kits', folio: 'Fecha', valid: 'vigente', days: 'días', name: 'Tu nombre (opcional)',
     concept: 'Concepto', qty: 'Cantidad', unitPrice: 'Precio por kit', subtotal: 'Importe',
     kitLinear: 'Kit de línea', kitLinearD: 'Poste de 7 ft, 3 travesaños de 2.40 m y tapa',
     kitEnd: 'Kit de extremo', kitEndD: 'Para puertas y finales de cerco. Poste de 7 ft, 3 travesaños y tapa',
@@ -754,10 +755,10 @@ const I = {
     taxIncl: 'IVA incluido', shipFree: 'envío sin costo', shipTbd: 'flete por cotizar', totalL: 'Total, IVA incluido', perUnit: 'por {u} de cerco', meterW: 'metro', footW: 'pie',
     noteCut1: '1 tramo mide menos de 2.40 m: su travesaño se corta a la medida al armar.', noteCutN: '{n} tramos miden menos de 2.40 m: sus travesaños se cortan a la medida al armar.',
     noteSpare1: 'Te sobra 1 juego de 3 travesaños. Es tuyo: sirve para los cortes o de repuesto.', noteSpareN: 'Te sobran {n} juegos de 3 travesaños. Son tuyos: sirven para los cortes o de repuesto.',
-    noteMat: 'Precio del material. Accesorios y herrajes se cotizan aparte.', noteAngle: 'La esquina {n} mide {v}°. El kit de esquina es de 90°; lo revisamos contigo por WhatsApp.',
-    noteShipTbd: 'Fuera de Tijuana, Rosarito y Tecate el flete se suma a esta cotización.', empty: 'Agrega medidas para cotizar.',
-    actTitle: '¿Te convence?', actHint: 'Mándanos la cotización por WhatsApp. El mensaje ya lleva tus medidas, los kits y el total; revisamos las medidas contigo y coordinamos la entrega.',
-    msgHello: 'Hola, me interesa este cerco.', msgIam: 'Soy {n}.', msgTitle: 'Cotización de cerco ranch PVC', msgLot: 'Medidas', msgHeight: 'Altura', msgDoors: 'Puertas', msgTotal: 'Total', msgDate: 'Cotizado el', perim: 'de cerco',
+    noteMat: 'Te damos el precio exacto por WhatsApp: material con IVA. Accesorios y herrajes se cotizan aparte.', noteAngle: 'La esquina {n} mide {v}°. El kit de esquina es de 90°; lo revisamos contigo por WhatsApp.',
+    noteShipTbd: 'Fuera de Tijuana, Rosarito y Tecate el flete se cotiza aparte.', empty: 'Agrega medidas para calcular.',
+    actTitle: '¿Quieres tu precio exacto?', actHint: 'Mándanos tu cerco por WhatsApp. El mensaje ya lleva tus medidas y los kits; te contestamos con el precio, revisamos las medidas contigo y coordinamos la entrega.',
+    msgHello: 'Hola, me interesa este cerco. ¿Me pasan el precio?', msgIam: 'Soy {n}.', msgTitle: 'Cerco de PVC tipo rancho', msgCalc: 'Calculado el', msgLot: 'Medidas', msgHeight: 'Altura', msgDoors: 'Puertas', msgTotal: 'Total', msgDate: 'Cotizado el', perim: 'de cerco',
     msgNoMeasures: 'Hola, quiero cotizar un cerco de PVC pero no tengo las medidas. Te mando la ubicación de mi terreno.',
     fenceTitle: 'El cerco', fenceP1: 'Es el cerco blanco de tres travesaños que se ve en ranchos y caballerizas. Es de PVC, así que no se pudre, no se oxida y no hay que pintarlo; para limpiarlo basta con agua y jabón.',
     fenceP2: 'Se vende por kits. Cada kit trae un poste con su tapa y los tres travesaños de un tramo. Los travesaños entran en las ranuras del poste, y el último tramo de cada lado se corta a la medida.',
@@ -771,7 +772,11 @@ const I = {
     q3: '¿Venden portones?', a3: 'No. La puerta es el hueco entre dos postes de extremo; tú eliges el ancho para poner el portón que prefieras.',
     q4: '¿Por qué me sobran travesaños?', a4: 'Cada kit trae sus travesaños, y al final de cada tramo continuo queda un juego extra. Te lo quedas: sirve para los cortes o de repuesto.',
     q5: '¿Hay otros colores?', a5: 'Por ahora solo blanco.',
-    q6: '¿El precio incluye IVA?', a6: 'Sí. La cotización tiene vigencia de 15 días.',
+    q6: '¿El precio incluye IVA?', a6: 'Sí. El precio que te damos por WhatsApp ya incluye IVA y tiene vigencia de 15 días.',
+    q8: '¿Quién lo instala?', a8: 'Nosotros vendemos el material; no hacemos instalaciones. Lo puede armar cualquier albañil o contratista de tu confianza: los postes se entierran, con o sin concreto, y los travesaños entran en las ranuras del poste.',
+    q9: '¿Puedo ver el material antes de comprar?', a9: 'Sí. Tenemos el material en Rosarito. Escríbenos por WhatsApp y agendamos tu visita.',
+    q10: '¿Cómo se paga?', a10: 'Por transferencia o en efectivo, al recibir el material.',
+    q11: '¿Cuánto tarda la entrega?', a11: 'De 1 a 3 días después de confirmar tu pedido. En Tijuana, Rosarito y Tecate el envío no cuesta; a otras zonas el flete se cotiza aparte.',
     q7: 'Mi terreno no es rectangular, ¿qué hago?', a7: 'Usa la forma “Libre” y captura lado por lado, o mándanos la ubicación de tu terreno por WhatsApp y te ayudamos.',
     bandTitle: '¿No tienes las medidas a la mano?', bandLead: 'Mándanos la ubicación de tu terreno o unas fotos por WhatsApp y te ayudamos a calcular tu cerco.', bandCta: 'Escribir por WhatsApp',
     footNote: '© 2026 Lindero. Precios con IVA, vigentes 15 días. Accesorios y herrajes se cotizan aparte.',
@@ -780,9 +785,10 @@ const I = {
   en: {
     brandSub: 'PVC fences', navTool: 'Quote', navFence: 'The fence', navFaq: 'FAQ',
     heroTitle: 'PVC ranch fencing in Tijuana, Rosarito and Tecate',
-    heroLead: 'Work out how many kits you need and what your fence costs before you call us. When you’re ready, send us the quote on WhatsApp and we’ll go over it with you.',
-    heroCta: 'Price my fence', heroWa: 'Message us', heroKitL: 'Post and 3-rail kit:', heroM1: 'Prices include VAT', heroM2: 'Free delivery in Tijuana, Rosarito and Tecate',
-    toolTitle: 'Price your fence', toolLead: 'Enter your lot measurements. The drawing and the price update as you type.',
+    heroLead: 'Send us your lot measurements or location on WhatsApp and we’ll give you the exact price. If you like, work out here how many kits your fence needs and see it in 3D.',
+    heroCta: 'Plan my fence', heroWa: 'Get a price on WhatsApp', heroKitL: 'About', heroKitR: 'per meter, VAT included', heroM1: 'Delivery in 1 to 3 days, free in Tijuana, Rosarito and Tecate', heroM2: 'See the material in Rosarito: book a visit',
+    msgHero: 'Hi, I’d like a price for a PVC fence.',
+    toolTitle: 'Plan your fence', toolLead: 'Enter your lot measurements. The drawing and the kits update as you type.',
     panelTitle: 'Your fence', lot: 'Lot', shapeRect: 'Rectangle', shapeL: 'L-shape', shapeLine: 'Straight', shapeCustom: 'Custom', shapeCircle: 'Circle', circ: 'Circumference', diam: 'Diameter', circInfo: 'Built with {n} straight sections of {l}.', msgCirc: 'circle, {c} around ({d} across)', noteRound: 'Round pen: {n} posts turning {v}° each, not 90°. We’ll check it with you on WhatsApp.',
     width: 'Width', length: 'Length', notchW: 'Cut-out width', notchL: 'Cut-out length', lineLen: 'Fence length',
     side: 'Side', sideLen: 'Length', turn: 'At the end, the fence…', angle: 'Angle (+ right, − left)',
@@ -798,9 +804,9 @@ const I = {
     seeWith: 'Show:', useHouse: 'House', useHorses: 'Horses', useCattle: 'Cattle', useArena: 'Arena', useVine: 'Vineyard',
     useOpen: 'Only available for closed lots.', useNoHouse: 'The house does not fit on this lot.', useNoArena: 'The arena does not fit on this lot.', useNoVine: 'The vineyard does not fit on this lot.',
     legCorner: 'Corner', legLinear: 'Line', legEnd: 'End', legDoor: 'Gate',
-    sumLabel: 'Total incl. VAT', perShort: 'per {u}', seeBreakdown: 'See breakdown', kits: 'kits', of: 'of fence',
-    askBtn: 'Request on WhatsApp', askBtnShort: 'Request', shareBtn: 'Send to someone else',
-    quote: 'Your quote, item by item', folio: 'Date', valid: 'valid for', days: 'days', name: 'Your name (optional)',
+    sumLabel: 'Your fence', perShort: 'per {u}', seeBreakdown: 'See breakdown', kits: 'kits', of: 'of fence',
+    askBtn: 'Get my price on WhatsApp', askBtnShort: 'Get price', shareBtn: 'Send to someone else',
+    quote: 'What your fence needs', totalKits: 'Total kits', folio: 'Date', valid: 'valid for', days: 'days', name: 'Your name (optional)',
     concept: 'Item', qty: 'Qty', unitPrice: 'Price per kit', subtotal: 'Amount',
     kitLinear: 'Line kit', kitLinearD: '7 ft post, 3 rails of 2.40 m and cap',
     kitEnd: 'End kit', kitEndD: 'For gates and fence ends. 7 ft post, 3 rails and cap',
@@ -808,10 +814,10 @@ const I = {
     taxIncl: 'VAT included', shipFree: 'free delivery', shipTbd: 'freight to be quoted', totalL: 'Total, VAT included', perUnit: 'per {u} of fence', meterW: 'meter', footW: 'foot',
     noteCut1: '1 section is shorter than 2.40 m: its rails are cut to size when assembling.', noteCutN: '{n} sections are shorter than 2.40 m: their rails are cut to size when assembling.',
     noteSpare1: '1 spare set of 3 rails is left over. It’s yours: use it for the cuts or keep it as a spare.', noteSpareN: '{n} spare sets of 3 rails are left over. They’re yours: use them for the cuts or keep them as spares.',
-    noteMat: 'Material price. Accessories and hardware are quoted separately.', noteAngle: 'Corner {n} is {v}°. The corner kit is 90°; we’ll check it with you on WhatsApp.',
-    noteShipTbd: 'Outside Tijuana, Rosarito and Tecate, freight is added to this quote.', empty: 'Enter measurements to get a quote.',
-    actTitle: 'Happy with it?', actHint: 'Send us the quote on WhatsApp. The message already has your measurements, the kits and the total; we’ll check the measurements with you and arrange delivery.',
-    msgHello: 'Hi, I’m interested in this fence.', msgIam: 'I’m {n}.', msgTitle: 'PVC ranch fence quote', msgLot: 'Measurements', msgHeight: 'Height', msgDoors: 'Gates', msgTotal: 'Total', msgDate: 'Quoted on', perim: 'of fence',
+    noteMat: 'We’ll give you the exact price on WhatsApp: material, VAT included. Accessories and hardware are quoted separately.', noteAngle: 'Corner {n} is {v}°. The corner kit is 90°; we’ll check it with you on WhatsApp.',
+    noteShipTbd: 'Outside Tijuana, Rosarito and Tecate, freight is quoted separately.', empty: 'Enter measurements to plan your fence.',
+    actTitle: 'Want your exact price?', actHint: 'Send us your fence on WhatsApp. The message already has your measurements and the kits; we’ll reply with the price, check the measurements with you and arrange delivery.',
+    msgHello: 'Hi, I’m interested in this fence. Could you send me the price?', msgIam: 'I’m {n}.', msgTitle: 'PVC ranch fence', msgCalc: 'Worked out on', msgLot: 'Measurements', msgHeight: 'Height', msgDoors: 'Gates', msgTotal: 'Total', msgDate: 'Quoted on', perim: 'of fence',
     msgNoMeasures: 'Hi, I’d like a quote for a PVC fence but I don’t have the measurements. I’ll send you my lot location.',
     fenceTitle: 'The fence', fenceP1: 'It’s the white three-rail fence you see on ranches and horse properties. It’s PVC, so it doesn’t rot, rust or need painting; soap and water is all it takes to clean it.',
     fenceP2: 'It’s sold in kits. Each kit has a post with its cap and the three rails for one section. The rails slot into the post, and the last section on each side is cut to size.',
@@ -825,7 +831,11 @@ const I = {
     q3: 'Do you sell gates?', a3: 'No. A gate is the opening between two end posts; you choose the width to fit the gate you prefer.',
     q4: 'Why are there spare rails?', a4: 'Every kit comes with its rails, so each continuous run ends with one extra set. You keep it for cuts or as a spare.',
     q5: 'Are there other colors?', a5: 'White only for now.',
-    q6: 'Does the price include VAT?', a6: 'Yes. Quotes are valid for 15 days.',
+    q6: 'Does the price include VAT?', a6: 'Yes. The price we send you on WhatsApp includes VAT and is valid for 15 days.',
+    q8: 'Who installs it?', a8: 'We sell the material; we don’t do installations. Any builder or contractor you trust can put it up: the posts go in the ground, with or without concrete, and the rails slot into the posts.',
+    q9: 'Can I see the material before buying?', a9: 'Yes. The material is in Rosarito. Message us on WhatsApp and we’ll book your visit.',
+    q10: 'How do I pay?', a10: 'By bank transfer or cash, when the material is delivered.',
+    q11: 'How long does delivery take?', a11: '1 to 3 days after you confirm your order. Delivery is free in Tijuana, Rosarito and Tecate; freight to other areas is quoted separately.',
     q7: 'My lot isn’t a rectangle. What do I do?', a7: 'Use the “Custom” shape and enter it side by side, or send us your lot location on WhatsApp and we’ll help.',
     bandTitle: 'Don’t have the measurements handy?', bandLead: 'Send us your lot location or a few photos on WhatsApp and we’ll help you work out your fence.', bandCta: 'Message us on WhatsApp',
     footNote: '© 2026 Lindero. Prices include VAT and are valid for 15 days. Accessories and hardware are quoted separately.',
@@ -1257,29 +1267,29 @@ function quoteBody(L, m) {
   lines.push(`${t('msgLot')}: ${dims}`, `${t('msgHeight')}: ${heightTxt()}`);
   if (L.nDoors) lines.push(`${t('msgDoors')}: ${L.doors.map(d => fmtLen(d.w)).join(', ')}`);
   [['linear', 'kitLinear'], ['end', 'kitEnd'], ['corner', 'kitCorner']].forEach(([k, n]) => { if (L.kits[k]) lines.push(`${L.kits[k]} × ${t(n)}`); });
-  lines.push(`*${t('msgTotal')}: ${fmtMoney(m.total)} ${S.cur}* (${t('taxIncl')})`);
-  lines.push(`${fmtMoney(perUnit(L, m))} ${S.cur} ${t('perUnit', { u: S.unit === 'm' ? t('meterW') : t('footW') })}`);
+  lines.push(`*${t('totalKits')}: ${m.n}*`);
   lines.push(`${t('zone')}: ${S.zone === 'local' ? t('zoneLocal') + ', ' + t('shipFree') : t(S.zone === 'valle' ? 'zoneValle' : 'zoneOther') + ', ' + t('shipTbd')}`);
-  lines.push(`${t('msgDate')} ${dateTxt()}, ${t('valid')} ${CFG.validityDays} ${t('days')}`);
+  lines.push(`${t('msgCalc')} ${dateTxt()}`);
   return lines.join('\n');
 }
 function renderQuote(L) {
   const m = money(L), per = perUnit(L, m), uWord = S.unit === 'm' ? t('meterW') : t('footW'), shipL = S.zone === 'local' ? t('shipFree') : t('shipTbd');
   const rows = [['linear', 'kitLinear', 'kitLinearD'], ['end', 'kitEnd', 'kitEndD'], ['corner', 'kitCorner', 'kitCornerD']];
-  $('bom').innerHTML = rows.filter(r => L.kits[r[0]] > 0).map(r => `<tr><td>${t(r[1])}<small class="desc">${t(r[2])}</small><small class="mq">${L.kits[r[0]]} × ${fmtMoney(m.unit)}</small></td><td class="r">${L.kits[r[0]]}</td><td class="r">${fmtMoney(m.unit)}</td><td class="r">${fmtMoney(Math.round(m.unit * L.kits[r[0]] * 100) / 100)}</td></tr>`).join('') || `<tr><td colspan="4">${t('empty')}</td></tr>`;
-  const tot = fmtMoney(m.total) + ' ' + S.cur;
-  $('grand').textContent = tot; $('taxLabel').textContent = `${t('totalL')}, ${shipL}`;
-  $('pTotal').textContent = tot; $('mTotal').textContent = tot;
-  $('pPer').innerHTML = m.n ? `<strong>${fmtMoney(per)}</strong>${t('perShort', { u: uWord })}` : '';
-  $('pMeta').textContent = `${m.n} ${t('kits')} · ${fmtLen(L.fenced)} ${t('of')}`;
-  $('mMeta').textContent = `${m.n} ${t('kits')}`;
-  $('heroKit').textContent = `${fmtMoney(S.cur === 'USD' ? CFG.kitUSD : CFG.kitMXN)} ${S.cur}`;
+  $('bom').innerHTML = rows.filter(r => L.kits[r[0]] > 0).map(r => `<tr><td>${t(r[1])}<small class="desc">${t(r[2])}</small></td><td class="r">${L.kits[r[0]]}</td></tr>`).join('') || `<tr><td colspan="2">${t('empty')}</td></tr>`;
+  // Prices are no longer shown: the page shows meters and kits, and the exact total is given on WhatsApp (decided 24/nov/2026)
+  const kitsTxt = `${m.n} ${t('kits')}`;
+  $('grand').textContent = kitsTxt; $('taxLabel').textContent = `${t('totalKits')} · ${shipL}`;
+  $('pTotal').textContent = m.n ? fmtLen(L.fenced) : '—'; $('mTotal').textContent = m.n ? kitsTxt : '—';
+  $('pPer').innerHTML = m.n ? `<strong>${kitsTxt}</strong>${t('of')}` : '';
+  $('pMeta').textContent = '';
+  $('mMeta').textContent = m.n ? `${fmtLen(L.fenced)} ${t('of')}` : '';
+  $('heroKit').textContent = `$${(S.cur === 'USD' ? CFG.perMeterUSD : CFG.perMeterMXN).toLocaleString(S.lang === 'es' ? 'es-MX' : 'en-US')} ${S.cur}`;
   const notes = [];
   if (L.cutSpans) notes.push(['', L.cutSpans === 1 ? t('noteCut1') : t('noteCutN', { n: L.cutSpans })]);
   if (L.spare) notes.push(['', L.spare === 1 ? t('noteSpare1') : t('noteSpareN', { n: L.spare })]);
   L.warnings.forEach(w => notes.push(['warn', t(w.k === 'round' ? 'noteRound' : 'noteAngle', { n: w.n, v: w.v })])); if (S.zone !== 'local') notes.push(['warn', t('noteShipTbd')]); notes.push(['', t('noteMat')]);
   $('notes').innerHTML = notes.map(n => `<li class="${n[0]}">${n[1]}</li>`).join('');
-  $('folio').textContent = `${dateTxt()} · ${t('valid')} ${CFG.validityDays} ${t('days')}`;
+  $('folio').textContent = dateTxt();
   const body = quoteBody(L, m), hello = t('msgHello') + (S.name.trim() ? ' ' + t('msgIam', { n: S.name.trim() }) : '');
   const href = waUrl(CFG.contacts[0].num, hello + '\n\n' + body + (SRC ? '\n\n' + t('srcLine', { s: SRC }) : ''));
   document.querySelectorAll('.cta-wa').forEach(a => { a.href = href; });
@@ -1304,8 +1314,9 @@ function refresh() {
 function renderStatic() {
   const c0 = CFG.contacts[0];
   document.querySelectorAll('.wa-plain').forEach(a => { a.href = waUrl(c0.num); });
+  document.querySelectorAll('.wa-hero').forEach(a => { a.href = waUrl(c0.num, t('msgHero') + (SRC ? ' ' + t('srcLine', { s: SRC }) : '')); });
   document.querySelectorAll('.nomeasure').forEach(a => { a.href = waUrl(c0.num, t('msgNoMeasures') + (SRC ? ' ' + t('srcLine', { s: SRC }) : '')); });
-  $('faq').innerHTML = [1, 2, 3, 4, 5, 6, 7].map(i => `<details><summary>${t('q' + i)}</summary><p>${t('a' + i)}</p></details>`).join('');
+  $('faq').innerHTML = [1, 8, 9, 10, 11, 2, 3, 4, 5, 6, 7].map(i => `<details><summary>${t('q' + i)}</summary><p>${t('a' + i)}</p></details>`).join('');
   $('specs').innerHTML = [['specMat', 'specMatV'], ['specPost', 'specPostV'], ['specRails', 'specRailsV'], ['specSpan', 'specSpanV'], ['specH', 'specHV'], ['specKits', 'specKitsV']]
     .map(([a, b]) => `<div><dt>${t(a)}</dt><dd>${t(b)}</dd></div>`).join('');
   document.querySelectorAll('img[data-alt]').forEach(im => { im.alt = t(im.dataset.alt); });
